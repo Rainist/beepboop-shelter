@@ -1,0 +1,20 @@
+version: '3'
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+    command: bash -c "npm install && npm run watch"
+    environment:
+      - SLAPP_APP_HOST=http://docker.for.mac.localhost
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+  redis:
+    image: "redis:alpine"
+    volumes:
+      - ./tmp/redis/data:/data
