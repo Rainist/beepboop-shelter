@@ -11,6 +11,7 @@ services:
       - SLAPP_APP_HOST=http://docker.for.mac.localhost
     env_file:
       - .env
+      - .env-for-test
     ports:
       - "3000:3000"
       - "9229:9229"

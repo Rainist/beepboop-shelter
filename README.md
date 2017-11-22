@@ -31,3 +31,4 @@ connect each other using environment variables
 ## 8. Production hosting
 - docker
 - k8s
+- now

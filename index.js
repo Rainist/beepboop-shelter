@@ -1,10 +1,11 @@
+'use strict'
+
+const proxyTo = require('./proxy')
 const express = require('express')
-const app = express()
+const {slappHost} = require('./config')
 
-app.get('/', function (req, res) {
-  res.send('hello world')
-})
+const proxy = proxyTo(slappHost)
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+proxy.listen(3000, function () {
+  console.log('listening at 3000')
 })
