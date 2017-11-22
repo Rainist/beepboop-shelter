@@ -4,7 +4,7 @@
   "description": "mimic beepboophq.com",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon index.js",
+    "watch": "nodemon server.js",
     "test": "mocha -b"
   },
   "keywords": [

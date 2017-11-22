@@ -1,0 +1,9 @@
+version: '3'
+services:
+  ngrok:
+    image: wernight/ngrok
+    command: ash -c "ngrok http $${NGROK_TARGET_HOST}"
+    ports:
+      - "4040:4040"
+    env_file:
+      - .env-ngrok # $NGROK_TARGET_HOST=docker.for.mac.localhost:3000

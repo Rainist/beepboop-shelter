@@ -3,12 +3,10 @@ services:
   node:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - .:/usr/src/app
     command: bash -c "npm install && npm run watch"
-    environment:
-      - SLAPP_APP_HOST=http://docker.for.mac.localhost
     env_file:
       - .env
       - .env-for-test

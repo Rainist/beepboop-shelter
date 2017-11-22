@@ -3,8 +3,8 @@ run:
 	docker-compose up
 build:
 	docker-compose build
-# ngrok:
-# 	docker-compose -f docker-compose.yml -f docker-compose.ngrok.yml run ngrok
+ngrok:
+	docker-compose -f docker-compose.ngrok.yml run --service-ports ngrok
 down:
 	docker-compose -f docker-compose.yml -f docker-compose.ngrok.yml down
 # debug:

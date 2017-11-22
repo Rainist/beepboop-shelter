@@ -2,3 +2,4 @@ tmp
 node_modules
 .env
 .env-for-test
+.env-ngrok
