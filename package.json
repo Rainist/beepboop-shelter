@@ -14,11 +14,13 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "enumify": "^1.0.4",
     "express": "^4.16.2",
     "http-proxy": "^1.16.2",
     "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
     "nodemon": "^1.12.1",
+    "qs": "^6.5.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "slack": "^9.0.9"

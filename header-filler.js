@@ -3,6 +3,7 @@
 const _ = require('lodash')
 const config = require('./config')
 const slack = require('./slack')
+const Feature = require('./feature')
 
 const {
   slackAccessToken: accessToken,
@@ -10,7 +11,28 @@ const {
   slackBotUsername: botUsername
 } = config
 
-const genHeaders = (body) => {
+const genHeaders = (body, feature) => {
+  switch(feature) {
+  case Feature.EVENT:
+    return genHeadersJSON(body)
+  case Feature.ACTION:
+    return genHeadersForm(body)
+  }
+}
+
+const genHeadersForm = (body) => {
+  const payload = JSON.parse(body.payload)
+
+  const {
+    token: verificationToken,
+    team,
+    user
+  } = payload
+
+  return genHeadersByInfo({verificationToken, teamId: team.id, authedUsers: [user.id]})
+}
+
+const genHeadersJSON = (body) => {
   if (_.isEmpty(body)) {
     return []
   }
@@ -18,10 +40,13 @@ const genHeaders = (body) => {
   const {
     token: verificationToken,
     team_id: teamId,
-    api_app_id: apiAppId,
     authed_users: authedUsers
   } = body
 
+  return genHeadersByInfo({verificationToken, teamId, authedUsers})
+}
+
+const genHeadersByInfo = ({verificationToken, teamId, authedUsers}) => {
   const authedUserId = _(authedUsers).first()
 
   return [
@@ -65,6 +90,7 @@ const genHeaders = (body) => {
     //     'bb-slackteamresourceid': '' //TODO: fetch it!
     //   }
     // })(),
+    {'bb-slackteamid': teamId},
     (() => {
       return {
         // Incoming webhook props
@@ -81,7 +107,7 @@ const genHeaders = (body) => {
 }
 
 module.exports = {
-  fill: (body) => {
-    return Promise.all(genHeaders(body))
+  fill: (body, feature) => {
+    return Promise.all(genHeaders(body, feature))
   }
 }

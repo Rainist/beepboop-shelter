@@ -4,18 +4,48 @@ const _ = require('lodash')
 const express = require('express')
 const bodyParser = require('body-parser')
 const rp = require('request-promise')
-
+const qs = require('qs')
+const Feature = require('./feature')
 const app = express()
 
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
 
 const headerFiller = require('./header-filler')
 
 let proxyHost = ''
 
+function genOpts(feature, req, extraHeaders) {
+  switch(feature) {
+  case Feature.EVENT:
+    return {
+      method: req.method,
+      uri: `${proxyHost}${req.path}`,
+      headers: _.extend(req.headers, extraHeaders),
+      body: req.body,
+      json: true,
+      resolveWithFullResponse: true
+    }
+  case Feature.ACTION: {
+    const payload = req.body.payload
+    const rawFormBody = qs.stringify({payload: payload}, { format : 'RFC1738' })
+
+    return {
+      method: req.method,
+      uri: `${proxyHost}${req.path}`,
+      headers: _.extend(req.headers, extraHeaders, {'content-type': 'application/x-www-form-urlencoded'}),
+      body: rawFormBody,
+      resolveWithFullResponse: true
+    }
+  }}
+}
+
 app.all('*', (req, res) => {
+
+  const servingFeature = Feature.byPath(req.path)
+
   headerFiller
-    .fill(req.body)
+    .fill(req.body, servingFeature)
     .then(headerKVs => {
       return _.chain(headerKVs)
         .reduce((left, right) => {
@@ -23,14 +53,7 @@ app.all('*', (req, res) => {
         }).value()
     })
     .then(extraHeaders => {
-      return {
-        method: req.method,
-        uri: `${proxyHost}${req.path}`,
-        headers: _.extend(req.headers, extraHeaders),
-        body: req.body,
-        json: true,
-        resolveWithFullResponse: true
-      }
+      return genOpts(servingFeature, req, extraHeaders)
     })
     .then(options => {
       return rp(options)
