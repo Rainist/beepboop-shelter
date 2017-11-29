@@ -9,6 +9,8 @@ class Feature extends Enum {
       return Feature.EVENT
     case '/slack/action':
       return Feature.ACTION
+    default:
+      return null
     }
   }
 }

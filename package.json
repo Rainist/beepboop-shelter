@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "watch": "nodemon server.js",
-    "test": "mocha -b"
+    "lint": "eslint .",
+    "test": "npm run lint && mocha -b"
   },
   "keywords": [
     "beepboop"
@@ -26,6 +27,7 @@
     "slack": "^9.0.9"
   },
   "devDependencies": {
+    "eslint": "^4.12.0",
     "mocha": "^4.0.1",
     "supertest": "^3.0.0"
   }

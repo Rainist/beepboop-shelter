@@ -17,6 +17,8 @@ const genHeaders = (body, feature) => {
     return genHeadersJSON(body)
   case Feature.ACTION:
     return genHeadersForm(body)
+  default:
+    return []
   }
 }
 
@@ -46,7 +48,7 @@ const genHeadersJSON = (body) => {
   return genHeadersByInfo({verificationToken, teamId, authedUsers})
 }
 
-const genHeadersByInfo = ({verificationToken, teamId, authedUsers}) => {
+const genHeadersByInfo = ({verificationToken, teamId, authedUsers}) => { // eslint-disable-line no-unused-vars
   const authedUserId = _(authedUsers).first()
 
   return [
@@ -87,20 +89,20 @@ const genHeadersByInfo = ({verificationToken, teamId, authedUsers}) => {
     // (() => {
     //   // Beep Boop specific ID for App/Team association
     //   return {
-    //     'bb-slackteamresourceid': '' //TODO: fetch it!
+    //     'bb-slackteamresourceid': '' //maybeTODO: fetch it!
     //   }
     // })(),
     {'bb-slackteamid': teamId},
     (() => {
       return {
         // Incoming webhook props
-        'bb-incomingwebhookurl': '', //TODO: fetch it!
-        'bb-incomingwebhookchannel': '' //TODO: fetch it!
+        'bb-incomingwebhookurl': '', //maybeTODO: fetch it!
+        'bb-incomingwebhookchannel': '' //maybeTODO: fetch it!
       }
     })(),
     (() => {
       return {
-        'bb-error': '' //TODO: fetch it!
+        'bb-error': '' //maybeTODO: fetch it!
       }
     })()
   ]

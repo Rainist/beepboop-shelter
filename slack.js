@@ -4,7 +4,7 @@ const _ = require('lodash')
 const Slack = require('slack')
 const config = require('./config')
 const {
-  slackAccessToken: accessToken,
+  // slackAccessToken: accessToken,
   slackBotAccessToken: botToken,
   slackBotUsername: botUsername
 } = config
@@ -17,8 +17,8 @@ const {
   cacheTeam
 } = require('./slack-cacher')
 
-function _getBot(botName) {
-  //TODO: find a way to do this without knowing the bot's username since we already have bot's access token
+function _getBot(botName) { // eslint-disable-line no-underscore-dangle
+  // find a way to do this without knowing the bot's username since we already have bot's access token
   return slack.users.list({
     token: botToken
   })
@@ -41,12 +41,12 @@ function _getBot(botName) {
 
 function getBot(botName) {
   return getCachedBot()
-    .catch(err => {
+    .catch(() => {
       return _getBot(botName)
     })
 }
 
-function _getTeamInfo(token) {
+function _getTeamInfo(token) { // eslint-disable-line no-underscore-dangle
   return slack.team.info({token})
     .then(res => {
       const {name, domain} = res.team
@@ -61,7 +61,7 @@ function _getTeamInfo(token) {
 
 function getTeamInfo(token) {
   return getCachedTeam()
-    .catch(err => {
+    .catch(() => {
       return _getTeamInfo(token)
     })
 }
@@ -72,8 +72,8 @@ function data() {
   return Promise.all([
     getBot(botUsername),
     getTeamInfo(token),
-  ]).
-    then(([bot, team]) => {
+  ])
+    .then(([bot, team]) => {
       const {name, domain} = team
 
       return {
