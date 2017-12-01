@@ -3,10 +3,14 @@
 const jwt = require('jsonwebtoken')
 
 const secretKey = 'jwt-secret'
-const oneHour = Math.floor(Date.now() / 1000) + (60 * 60)
+const oneHour = 60 * 60
 
 let botCached
 let teamInfoCached
+
+function nowInSeconds() {
+  return Math.floor(Date.now() / 1000)
+}
 
 function getCachedItem(token) {
   if (!token) {
@@ -35,7 +39,7 @@ function getCachedTeam() {
 
 function sign(payload) {
   return jwt.sign({
-    exp: oneHour,
+    exp: nowInSeconds() + oneHour,
     data: payload
   }, secretKey)
 }
