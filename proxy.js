@@ -60,7 +60,7 @@ function genOpts(feature, req, extraHeaders) {
   }
 }
 
-app.all('*', (req, res) => {
+app.all('/slack/*', (req, res) => {
 
   const servingFeature = Feature.byPath(req.path)
 
