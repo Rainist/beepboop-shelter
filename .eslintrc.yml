@@ -3,7 +3,7 @@ env:
   node: true
 extends: 'eslint:recommended'
 parserOptions:
-  ecmaVersion: 6
+  ecmaVersion: 2017
   ecmaFeatures:
     experimentalObjectRestSpread: true
 rules:
@@ -211,14 +211,14 @@ rules:
   prefer-destructuring: 'off'
   prefer-numeric-literals: error
   prefer-promise-reject-errors: 'off'
-  prefer-reflect: error
+  prefer-reflect: 'off'
   prefer-rest-params: error
   prefer-spread: error
   prefer-template: 'off'
   quote-props: 'off'
   quotes: 'off'
   radix: error
-  require-await: error
+  require-await: 'off'
   require-jsdoc: 'off'
   rest-spread-spacing:
     - error
