@@ -64,6 +64,7 @@ I'm planning to test those solutions and will share how to do it in the future
 - [x] Handling auth with slack by ENV vars
 - [x] Event Subscriptions
 - [x] Interact Components
+- [x] Persist API (in testing)
 
 ## 10. What's going to be added and tested
 - [ ] Slash Commands
