@@ -82,7 +82,13 @@ async function rkeys(begins=null) {
 // ---
 
 async function get(key) {
-  const { value, updated } = await rget(key)
+  const result = await rget(key)
+
+  if (!result) {
+    throw 404
+  }
+
+  const { value, updated } = result
 
   if ( value && updated ) {
     return { value, updated }

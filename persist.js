@@ -70,6 +70,7 @@ app.get('/persist/kv/:key', (req, res) => {
       res.json({key, value, updated})
     })
     .catch(err => {
+      console.warn(err)
       if (err === 404) {
         res.status(404).send()
       }

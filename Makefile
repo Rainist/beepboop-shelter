@@ -7,7 +7,7 @@ ngrok:
 	docker-compose -f docker-compose.ngrok.yml run --service-ports ngrok
 down:
 	docker-compose -f docker-compose.yml -f docker-compose.ngrok.yml down
-# debug:
-# 	docker-compose run --service-ports node bash -c "npm install && npm run watch-debug"
+debug:
+	docker-compose run -e DEBUG=express:* --service-ports node
 test:
 	docker-compose run node npm test
