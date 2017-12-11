@@ -5,13 +5,18 @@ const {slappAppHost} = require('./config')
 const persist = require('./persist')
 const proxy = proxyTo(slappAppHost)
 const redisRepo = require('./repo/redis')
+const express = require('express')
+const app = express()
 
-proxy.use('/api/v1', persist(redisRepo))
-proxy.set('trust proxy', true)
-proxy.get('/', (req, res) => {
+app.set('trust proxy', true)
+
+app.get('/', (req, res) => {
   res.send('beepboop-shelter')
 })
 
-proxy.listen(3000, function () {
+app.use('/api/v1', persist(redisRepo))
+app.use('/', proxy) // This must be at the end
+
+app.listen(3000, function () {
   console.log('listening at 3000')
 })

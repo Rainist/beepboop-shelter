@@ -6,22 +6,38 @@ const bodyParser = require('body-parser')
 const rp = require('request-promise')
 const qs = require('qs')
 const Feature = require('./feature')
-const app = express()
+const router = express.Router()
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+router.use(bodyParser.json())
+router.use(bodyParser.urlencoded({extended: true}))
 
 const headerFiller = require('./header-filler')
 
 let proxyHost = ''
 
-function genOpts(feature, req, extraHeaders) {
-  const baseOpts = {
+function getBaseOpts(req, extraHeaders={}) {
+  return {
     method: req.method,
     uri: `${proxyHost}${req.path}`,
     headers: _.extend(req.headers, extraHeaders),
     resolveWithFullResponse: true
   }
+}
+
+function getBodyAndType(req) {
+  const isJsonType = req.headers['content-type'] === 'application/json'
+  const isBodyJson = typeof req.body === 'object'
+  const isBodyNotJson = !isBodyJson
+  const possibleTextBody = isBodyNotJson ? req.body : null
+
+  return {
+    body: isJsonType && isBodyJson ? req.body : possibleTextBody,
+    json: req.headers['content-type'] === 'application/json'
+  }
+}
+
+function genOpts(feature, req, extraHeaders) {
+  const baseOpts = getBaseOpts(req, extraHeaders)
 
   switch(feature) {
   case Feature.EVENT:
@@ -44,24 +60,12 @@ function genOpts(feature, req, extraHeaders) {
       }
     )
   }
-  default: {
-    const isJsonType = req.headers['content-type'] === 'application/json'
-    const isBodyJson = typeof req.body === 'object'
-    const isBodyNotJson = !isBodyJson
-    const possibleTextBody = isBodyNotJson ? req.body : null
-    return _.extend(
-      baseOpts,
-      {
-        body: isJsonType && isBodyJson ? req.body : possibleTextBody ,
-        json: req.headers['content-type'] === 'application/json'
-      }
-    )
-  }
+  default:
+    return _.extend(baseOpts, getBodyAndType(req))
   }
 }
 
-app.all('/slack/*', (req, res) => {
-
+router.all('/slack/*', (req, res) => {
   const servingFeature = Feature.byPath(req.path)
 
   headerFiller
@@ -103,7 +107,37 @@ app.all('/slack/*', (req, res) => {
     })
 })
 
+router.all('*', (req, res) => {
+  rp(_.extend(
+    getBaseOpts(req),
+    getBodyAndType(req)
+  ))
+    .then(response => {
+      res
+        .set(response.headers)
+        .status(response.statusCode)
+        .send(response.body)
+    })
+    .catch(err => {
+      try {
+        res
+          .set(err.response.headers)
+          .status(err.response.statusCode)
+          .send(err.response.body)
+      }
+      catch(anotherErr) {
+        throw err || anotherErr
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      res
+        .status(501)
+        .send(err)
+    })
+})
+
 module.exports = _proxyHost => {
   proxyHost = _proxyHost
-  return app
+  return router
 }

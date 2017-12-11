@@ -1,3 +1,4 @@
+const express = require('express')
 const request = require('supertest')
 const persist = require('../persist')
 const memRepo = require('../repo/memory')
@@ -17,9 +18,10 @@ repos.map(repo => {
 }).map(({name, repo}) => { // eslint-disable-line array-callback-return
   describe(`test persist api via ${name}`, () => {
     let server
-
+    const persistApp = express()
+    persistApp.use(persist(repo))
     before(() => {
-      server = persist(repo).listen(4000, () => {})
+      server = persistApp.listen(4000, () => {})
     })
 
     after(() => {

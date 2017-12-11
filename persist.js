@@ -2,19 +2,19 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const app = express()
+const router = express.Router()
 
 let repository
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+router.use(bodyParser.json())
+router.use(bodyParser.urlencoded({extended: true}))
 
-app.get('/ping', (req, res) => {
+router.get('/ping', (req, res) => {
   res.send('pong')
 })
 
 // SET
-app.put('/persist/kv/:key', (req, res) => {
+router.put('/persist/kv/:key', (req, res) => {
   const { key } = req.params
   const { value } = req.body
 
@@ -34,7 +34,7 @@ app.put('/persist/kv/:key', (req, res) => {
 })
 
 // DELETE
-app.delete('/persist/kv/:key', (req, res) => {
+router.delete('/persist/kv/:key', (req, res) => {
   const {key} = req.params
 
   repository
@@ -47,7 +47,7 @@ app.delete('/persist/kv/:key', (req, res) => {
 })
 
 // LIST
-app.get('/persist/kv', (req, res) => {
+router.get('/persist/kv', (req, res) => {
   const { begins } = req.query
 
   repository.keys(begins)
@@ -61,7 +61,7 @@ app.get('/persist/kv', (req, res) => {
 })
 
 // GET
-app.get('/persist/kv/:key', (req, res) => {
+router.get('/persist/kv/:key', (req, res) => {
   const {key} = req.params
 
   repository
@@ -84,7 +84,7 @@ app.get('/persist/kv/:key', (req, res) => {
 })
 
 // MULTI GET
-app.post('/persist/mget', (req, res) => {
+router.post('/persist/mget', (req, res) => {
   const {keys} = req.body
 
   repository
@@ -109,5 +109,5 @@ app.post('/persist/mget', (req, res) => {
 
 module.exports = _repository => {
   repository = _repository
-  return app
+  return router
 }

@@ -1,7 +1,10 @@
+const express = require('express')
 const request = require('supertest')
 const proxyTo = require('../proxy')
 const echoServer = require('./echo-server')
-const proxy = proxyTo('http://localhost:5000')
+const proxy = express()
+
+proxy.use(proxyTo('http://localhost:5000'))
 
 const {
   slackAccessToken: accessToken,
@@ -23,12 +26,12 @@ describe('Proxy and manipulate header', () => {
   let server
   let echo
 
-  beforeEach(() => {
+  before(() => {
     echo = echoServer.listen(5000, () => {})
     server = proxy.listen(3000, () => {})
   })
 
-  afterEach(() => {
+  after(() => {
     server.close()
     echo.close()
   })
@@ -36,6 +39,12 @@ describe('Proxy and manipulate header', () => {
   it('respond to /', done => {
     request(server)
       .get('/')
+      .expect(200, done)
+  })
+
+  it('respond to /any/url/proxy', done => {
+    request(server)
+      .get('/any/url/proxy')
       .expect(200, done)
   })
 
