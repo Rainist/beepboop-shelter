@@ -1,6 +1,6 @@
 {
   "name": "beepboop-shelter",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "mimic beepboophq.com",
   "main": "index.js",
   "scripts": {
