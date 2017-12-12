@@ -31,6 +31,12 @@ const genHeadersForm = (body) => {
     user
   } = payload
 
+  if (!verificationToken ||
+      !team ||
+      !user) {
+    return []
+  }
+
   return genHeadersByInfo({verificationToken, teamId: team.id, authedUsers: [user.id]})
 }
 
@@ -44,6 +50,12 @@ const genHeadersJSON = (body) => {
     team_id: teamId,
     authed_users: authedUsers
   } = body
+
+  if (!verificationToken ||
+      !teamId ||
+      !authedUsers) {
+    return []
+  }
 
   return genHeadersByInfo({verificationToken, teamId, authedUsers})
 }

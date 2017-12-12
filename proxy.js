@@ -16,10 +16,14 @@ const headerFiller = require('./header-filler')
 let proxyHost = ''
 
 function getBaseOpts(req, extraHeaders={}) {
+  const headers = _.extend(req.headers, extraHeaders)
+
+  delete headers['content-length']
+
   return {
     method: req.method,
     uri: `${proxyHost}${req.path}`,
-    headers: _.extend(req.headers, extraHeaders),
+    headers: headers,
     resolveWithFullResponse: true
   }
 }
