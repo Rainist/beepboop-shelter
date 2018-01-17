@@ -14,6 +14,7 @@
   "author": "Heechul Ryu",
   "license": "MIT",
   "dependencies": {
+    "@godaddy/terminus": "^2.2.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "enumify": "^1.0.4",
